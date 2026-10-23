@@ -1,10 +1,629 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AmirHossein Rezaee 👾 | Software Engineer & Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#faf5ff',
+                            100: '#f3e8ff',
+                            400: '#c084fc',
+                            500: '#a855f7',
+                            600: '#9333ea',
+                            900: '#03020d',
+                            glow: '#d946ef'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #03020d;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #03020d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2e1065;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a855f7;
+        }
+
+        .glow-card {
+            background: rgba(15, 7, 32, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glow-card:hover {
+            border-color: rgba(217, 70, 239, 0.5);
+            box-shadow: 0 0 30px -5px rgba(168, 85, 247, 0.35);
+            transform: translateY(-4px);
+        }
+
+        .glow-text {
+            text-shadow: 0 0 20px rgba(217, 70, 239, 0.7);
+        }
+
+        #space-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.35; transform: scale(1); }
+            50% { opacity: 0.75; transform: scale(1.1); }
+        }
+        .bg-glow-sphere {
+            animation: pulseGlow 8s infinite ease-in-out;
+        }
+
+        @keyframes floatInvader {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(5deg); }
+        }
+        .invader-float {
+            display: inline-block;
+            animation: floatInvader 3s ease-in-out infinite;
+        }
+
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
 </head>
-<body>
-<h1>Yo!</h1>
+<body class="font-sans antialiased relative selection:bg-brand-500 selection:text-white">
+
+<canvas id="space-canvas"></canvas>
+
+<div class="fixed top-1/4 -left-40 w-96 h-96 bg-purple-600/20 rounded-full blur-[130px] pointer-events-none bg-glow-sphere"></div>
+<div class="fixed bottom-1/4 -right-40 w-96 h-96 bg-fuchsia-600/20 rounded-full blur-[130px] pointer-events-none bg-glow-sphere" style="animation-delay: 4s;"></div>
+
+<header class="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-brand-900/75 border-b border-purple-500/10 transition-all duration-300" id="navbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <a href="#hero" class="flex items-center gap-3 group">
+            <span class="text-3xl invader-float group-hover:scale-125 transition-transform duration-300">👾</span>
+            <span class="font-mono font-bold text-xl tracking-tight text-white group-hover:text-brand-400 transition-colors">
+                    AmirHossein Rezaee<span class="text-brand-500">.dev</span>
+                </span>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-8 font-mono text-sm">
+            <a href="#about" class="text-gray-300 hover:text-brand-400 transition-colors flex items-center gap-1.5"><span class="text-brand-500">01.</span> About</a>
+            <a href="#skills" class="text-gray-300 hover:text-brand-400 transition-colors flex items-center gap-1.5"><span class="text-brand-500">02.</span> Skills</a>
+            <a href="#projects" class="text-gray-300 hover:text-brand-400 transition-colors flex items-center gap-1.5"><span class="text-brand-500">03.</span> Projects</a>
+            <a href="#contact" class="px-4 py-2 rounded-lg border border-brand-500/40 text-brand-400 hover:bg-brand-500/10 transition-all hover:border-brand-500 shadow-lg shadow-purple-500/10">
+                👾 Connect
+            </a>
+        </nav>
+
+        <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-white p-2 text-2xl focus:outline-none" aria-label="Toggle Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden bg-slate-950/95 backdrop-blur-xl border-b border-purple-500/20 px-6 py-6 space-y-4 font-mono">
+        <a href="#about" class="block text-gray-300 hover:text-brand-400 py-2 border-b border-white/5"><span class="text-brand-500">01.</span> About</a>
+        <a href="#skills" class="block text-gray-300 hover:text-brand-400 py-2 border-b border-white/5"><span class="text-brand-500">02.</span> Skills</a>
+        <a href="#projects" class="block text-gray-300 hover:text-brand-400 py-2 border-b border-white/5"><span class="text-brand-500">03.</span> Projects</a>
+        <a href="#contact" class="block text-center mt-4 px-4 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-bold">👾 Say Hello</a>
+    </div>
+</header>
+
+<main class="relative z-10 pt-20">
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-[calc(100vh-80px)] flex items-center justify-center relative px-4 sm:px-6 lg:px-8 py-12">
+        <div class="max-w-5xl mx-auto text-center space-y-8">
+
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 backdrop-blur-sm text-brand-400 font-mono text-sm animate-bounce">
+                <span class="text-lg">👾</span> Software Engineer & Developer
+            </div>
+
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-tight leading-none">
+                Hi, I'm <span class="bg-gradient-to-r from-purple-400 via-fuchsia-500 to-pink-500 bg-clip-text text-transparent glow-text">AmirHossein Rezaee</span>
+            </h1>
+
+            <div class="h-12 flex items-center justify-center font-mono text-xl sm:text-2xl md:text-3xl text-gray-300">
+                <span>I build&nbsp;</span>
+                <span id="typed-text" class="text-brand-400 font-bold typing-cursor"></span>
+            </div>
+
+            <p class="max-w-2xl mx-auto text-gray-300 text-base sm:text-lg leading-relaxed font-normal">
+                Software engineer specializing in responsive web applications, backend services, algorithmic logic, and high-quality digital tools. Passionate about clean code, open-source development, and crafting modern web experiences 👾.
+            </p>
+
+            <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
+                <a href="#projects" class="px-8 py-4 rounded-xl bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-600 text-white font-bold hover:shadow-lg hover:shadow-purple-500/30 transition-all transform hover:-translate-y-1 flex items-center gap-2">
+                    <span>Explore Projects</span>
+                    <i class="fa-solid fa-arrow-down text-sm"></i>
+                </a>
+                <a href="#contact" class="px-8 py-4 rounded-xl border border-purple-500/30 bg-slate-900/60 hover:bg-slate-800/80 text-white font-semibold transition-all hover:border-brand-500 flex items-center gap-2">
+                    <span>👾 Get In Touch</span>
+                </a>
+            </div>
+
+            <div class="pt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+                <div class="glow-card p-4 rounded-xl text-center">
+                    <div class="text-2xl font-bold font-mono text-brand-400" id="stat-repos">--</div>
+                    <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider">GitHub Repos</div>
+                </div>
+                <div class="glow-card p-4 rounded-xl text-center">
+                    <div class="text-2xl font-bold font-mono text-brand-400">100%</div>
+                    <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Dedication</div>
+                </div>
+                <div class="glow-card p-4 rounded-xl text-center">
+                    <div class="text-2xl font-bold font-mono text-brand-400">Fullstack</div>
+                    <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Focus Area</div>
+                </div>
+                <div class="glow-card p-4 rounded-xl text-center">
+                    <div class="text-2xl font-bold font-mono text-brand-400">👾 Active</div>
+                    <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider">Developer</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="flex items-center gap-4 mb-12">
+            <h2 class="text-3xl font-extrabold text-white flex items-center gap-3">
+                <span class="text-brand-500 font-mono text-xl">01.</span> About Me
+            </h2>
+            <div class="h-[1px] bg-purple-500/20 flex-grow max-w-md"></div>
+        </div>
+
+        <div class="grid md:grid-cols-12 gap-8 items-center">
+            <div class="md:col-span-7 space-y-6 text-gray-300 text-lg leading-relaxed">
+                <p class="glow-card p-6 rounded-2xl">
+                    Hello! I'm AmirHossein Rezaee, a software engineer with a deep interest in web development, backend engineering, and algorithmic computing. Online, I build and share projects as <span class="text-brand-400 font-mono font-semibold">@amixrzi</span>.
+                </p>
+                <p>
+                    I love solving complex problems and turning innovative ideas into robust, responsive, user-friendly software applications. My stack encompasses modern web technologies, performance optimization, and reliable backend architectures.
+                </p>
+                <div class="grid grid-cols-2 gap-4 font-mono text-sm pt-2">
+                    <div class="flex items-center gap-2 text-gray-300">
+                        <span class="text-brand-500">👾</span> Clean Architecture
+                    </div>
+                    <div class="flex items-center gap-2 text-gray-300">
+                        <span class="text-brand-500">👾</span> JavaScript / TypeScript
+                    </div>
+                    <div class="flex items-center gap-2 text-gray-300">
+                        <span class="text-brand-500">👾</span> Web & UI Performance
+                    </div>
+                    <div class="flex items-center gap-2 text-gray-300">
+                        <span class="text-brand-500">👾</span> REST & GraphQL APIs
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-5 flex justify-center">
+                <div class="relative group w-full max-w-sm">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-600 rounded-3xl blur opacity-40 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                    <div class="relative glow-card p-8 rounded-3xl text-center space-y-6 border border-purple-500/20">
+                        <div class="w-32 h-32 mx-auto rounded-full bg-slate-950 border-2 border-brand-500/50 flex items-center justify-center text-6xl shadow-inner invader-float shadow-purple-900/50">
+                            👾
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">AmirHossein Rezaee</h3>
+                            <p class="text-brand-400 font-mono text-sm">@amixrzi</p>
+                        </div>
+                        <div class="pt-2 border-t border-purple-500/20 flex justify-center gap-6 text-xl text-gray-300">
+                            <a href="https://github.com/amixrzi" target="_blank" rel="noopener" class="hover:text-brand-400 transition-colors" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                            <a href="https://www.linkedin.com/in/amirhossein-rezaee" target="_blank" rel="noopener" class="hover:text-brand-400 transition-colors" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                            <a href="mailto:contact@amixrzi.dev" class="hover:text-brand-400 transition-colors" title="Email"><i class="fa-solid fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="flex items-center gap-4 mb-12">
+            <h2 class="text-3xl font-extrabold text-white flex items-center gap-3">
+                <span class="text-brand-500 font-mono text-xl">02.</span> Technical Matrix
+            </h2>
+            <div class="h-[1px] bg-purple-500/20 flex-grow max-w-md"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="glow-card p-6 rounded-2xl space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">👾</span>
+                        <h3 class="text-lg font-bold text-white">Frontend Stack</h3>
+                    </div>
+                    <span class="text-brand-400 font-mono text-sm">92%</span>
+                </div>
+                <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-purple-900/30">
+                    <div class="bg-gradient-to-r from-purple-500 to-fuchsia-500 h-full rounded-full" style="width: 92%;"></div>
+                </div>
+                <p class="text-xs text-gray-400">HTML5, CSS3, JavaScript (ES6+), React, Tailwind CSS, Responsive Design</p>
+            </div>
+
+            <div class="glow-card p-6 rounded-2xl space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">👾</span>
+                        <h3 class="text-lg font-bold text-white">Backend Engineering</h3>
+                    </div>
+                    <span class="text-brand-400 font-mono text-sm">86%</span>
+                </div>
+                <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-purple-900/30">
+                    <div class="bg-gradient-to-r from-purple-500 to-fuchsia-500 h-full rounded-full" style="width: 86%;"></div>
+                </div>
+                <p class="text-xs text-gray-400">Node.js, Express, Python, REST APIs, Database Integration</p>
+            </div>
+
+            <div class="glow-card p-6 rounded-2xl space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">👾</span>
+                        <h3 class="text-lg font-bold text-white">Algorithms & Logic</h3>
+                    </div>
+                    <span class="text-brand-400 font-mono text-sm">90%</span>
+                </div>
+                <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-purple-900/30">
+                    <div class="bg-gradient-to-r from-purple-500 to-fuchsia-500 h-full rounded-full" style="width: 90%;"></div>
+                </div>
+                <p class="text-xs text-gray-400">Data Structures, Problem Solving, Clean Code, Performance Tuning</p>
+            </div>
+
+            <div class="glow-card p-6 rounded-2xl space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">👾</span>
+                        <h3 class="text-lg font-bold text-white">Tools & Version Control</h3>
+                    </div>
+                    <span class="text-brand-400 font-mono text-sm">88%</span>
+                </div>
+                <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-purple-900/30">
+                    <div class="bg-gradient-to-r from-purple-500 to-fuchsia-500 h-full rounded-full" style="width: 88%;"></div>
+                </div>
+                <p class="text-xs text-gray-400">Git, GitHub Workflows, VS Code, Linux Tools, Deployment</p>
+            </div>
+
+            <div class="glow-card p-6 rounded-2xl space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">👾</span>
+                        <h3 class="text-lg font-bold text-white">Web Performance</h3>
+                    </div>
+                    <span class="text-brand-400 font-mono text-sm">85%</span>
+                </div>
+                <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-purple-900/30">
+                    <div class="bg-gradient-to-r from-purple-500 to-fuchsia-500 h-full rounded-full" style="width: 85%;"></div>
+                </div>
+                <p class="text-xs text-gray-400">Lighthouse Optimization, Asset Bundling, Speed Metrics, SEO Best Practices</p>
+            </div>
+
+            <div class="glow-card p-6 rounded-2xl space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">👾</span>
+                        <h3 class="text-lg font-bold text-white">System Architecture</h3>
+                    </div>
+                    <span class="text-brand-400 font-mono text-sm">82%</span>
+                </div>
+                <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-purple-900/30">
+                    <div class="bg-gradient-to-r from-purple-500 to-fuchsia-500 h-full rounded-full" style="width: 82%;"></div>
+                </div>
+                <p class="text-xs text-gray-400">Modular Design Patterns, API Contracts, Scalable Workflows</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-12">
+            <div class="flex items-center gap-4">
+                <h2 class="text-3xl font-extrabold text-white flex items-center gap-3">
+                    <span class="text-brand-500 font-mono text-xl">03.</span> Projects & Repositories
+                </h2>
+                <div class="h-[1px] bg-purple-500/20 flex-grow max-w-xs hidden sm:block"></div>
+            </div>
+            <a href="https://github.com/amixrzi" target="_blank" rel="noopener" class="font-mono text-xs text-brand-400 hover:underline flex items-center gap-2">
+                <span>View all on GitHub (@amixrzi)</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+        </div>
+
+        <div id="projects-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="glow-card p-6 rounded-2xl animate-pulse space-y-4">
+                <div class="h-6 bg-purple-950/60 rounded w-3/4"></div>
+                <div class="h-16 bg-purple-950/30 rounded"></div>
+                <div class="h-4 bg-purple-950/60 rounded w-1/2"></div>
+            </div>
+            <div class="glow-card p-6 rounded-2xl animate-pulse space-y-4">
+                <div class="h-6 bg-purple-950/60 rounded w-3/4"></div>
+                <div class="h-16 bg-purple-950/30 rounded"></div>
+                <div class="h-4 bg-purple-950/60 rounded w-1/2"></div>
+            </div>
+            <div class="glow-card p-6 rounded-2xl animate-pulse space-y-4">
+                <div class="h-6 bg-purple-950/60 rounded w-3/4"></div>
+                <div class="h-16 bg-purple-950/30 rounded"></div>
+                <div class="h-4 bg-purple-950/60 rounded w-1/2"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center space-y-8">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10 text-brand-400 font-mono text-sm">
+            <span>👾</span> What's Next?
+        </div>
+        <h2 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">Let's Build Together</h2>
+        <p class="text-gray-300 text-lg max-w-xl mx-auto">
+            I'm always open to new project opportunities, open-source collaborations, or software discussions. Feel free to reach out anytime!
+        </p>
+
+        <div class="glow-card p-8 rounded-3xl max-w-xl mx-auto space-y-6 text-left border border-purple-500/20">
+            <form id="contact-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block font-mono text-xs text-gray-400 mb-1">YOUR NAME</label>
+                    <input type="text" required placeholder="John Doe" class="w-full bg-slate-950 border border-purple-500/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500 font-sans">
+                </div>
+                <div>
+                    <label class="block font-mono text-xs text-gray-400 mb-1">YOUR EMAIL</label>
+                    <input type="email" required placeholder="john@example.com" class="w-full bg-slate-950 border border-purple-500/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500 font-sans">
+                </div>
+                <div>
+                    <label class="block font-mono text-xs text-gray-400 mb-1">MESSAGE</label>
+                    <textarea rows="4" required placeholder="Hi AmirHossein, let's connect..." class="w-full bg-slate-950 border border-purple-500/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-500 font-sans"></textarea>
+                </div>
+                <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-600 text-white font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2">
+                    <span>Send Message</span>
+                    <span class="text-lg">👾</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="flex flex-wrap justify-center items-center gap-6 pt-4">
+            <a href="https://github.com/amixrzi" target="_blank" rel="noopener" class="glow-card px-6 py-3 rounded-xl text-gray-300 hover:text-brand-400 flex items-center gap-2 font-mono text-sm">
+                <i class="fa-brands fa-github text-lg"></i>
+                <span>github/amixrzi</span>
+            </a>
+            <button onclick="copyToClipboard('contact@amixrzi.dev')" class="glow-card px-6 py-3 rounded-xl text-gray-300 hover:text-brand-400 flex items-center gap-2 font-mono text-sm">
+                <i class="fa-solid fa-copy text-lg"></i>
+                <span id="copy-status">Copy Email 👾</span>
+            </button>
+        </div>
+    </section>
+
+</main>
+
+<footer class="border-t border-purple-500/10 py-8 text-center text-gray-500 font-mono text-xs relative z-10">
+    <p>Built with 👾 for <span class="text-brand-400">AmirHossein Rezaee</span> (@amixrzi)</p>
+</footer>
+
+<script>
+    const canvas = document.getElementById('space-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+        constructor() {
+            this.reset();
+        }
+        reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 0.5;
+            this.speedX = (Math.random() - 0.5) * 0.4;
+            this.speedY = (Math.random() - 0.5) * 0.4;
+            this.alpha = Math.random() * 0.6 + 0.2;
+            this.color = Math.random() > 0.4 ? '168, 85, 247' : '217, 70, 239';
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                this.reset();
+            }
+        }
+        draw() {
+            ctx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < 90; i++) {
+        particles.push(new Particle());
+    }
+
+    function animateCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+        requestAnimationFrame(animateCanvas);
+    }
+
+    const words = ["Web Applications 👾", "Clean Architecture", "Algorithmic Logic", "Modern Interfaces"];
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    const typedTextSpan = document.getElementById("typed-text");
+
+    function typeEffect() {
+        const currentWord = words[wordIndex];
+        if (isDeleting) {
+            typedTextSpan.textContent = currentWord.substring(0, charIndex - 1);
+            charIndex--;
+        } else {
+            typedTextSpan.textContent = currentWord.substring(0, charIndex + 1);
+            charIndex++;
+        }
+
+        let typeSpeed = isDeleting ? 40 : 80;
+
+        if (!isDeleting && charIndex === currentWord.length) {
+            typeSpeed = 1800;
+            isDeleting = true;
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            wordIndex = (wordIndex + 1) % words.length;
+            typeSpeed = 400;
+        }
+
+        setTimeout(typeEffect, typeSpeed);
+    }
+
+    async function fetchGitHubRepos() {
+        const container = document.getElementById("projects-container");
+        const reposStat = document.getElementById("stat-repos");
+
+        const fallbackProjects = [
+            {
+                name: "amixrzi.github.io",
+                description: "Personal portfolio website showcase featuring purple space monster aesthetic, dynamic cards, and interactive animations 👾.",
+                html_url: "https://github.com/amixrzi",
+                stargazers_count: 5,
+                language: "HTML / JS"
+            },
+            {
+                name: "fullstack-web-suite",
+                description: "Scalable modular web application built with modern front-end design and RESTful backend architectures.",
+                html_url: "https://github.com/amixrzi",
+                stargazers_count: 8,
+                language: "TypeScript"
+            },
+            {
+                name: "algorithms-playground",
+                description: "Collection of data structures, algorithmic implementations, and performance optimization benchmarks.",
+                html_url: "https://github.com/amixrzi",
+                stargazers_count: 12,
+                language: "JavaScript"
+            }
+        ];
+
+        try {
+            const response = await fetch("https://api.github.com/users/amixrzi/repos?sort=updated&per_page=6");
+            if (!response.ok) throw new Error("GitHub API limit or offline");
+            const repos = await response.json();
+
+            if (reposStat) reposStat.textContent = repos.length || "6+";
+
+            if (repos.length === 0) {
+                renderProjects(fallbackProjects);
+                return;
+            }
+
+            renderProjects(repos);
+        } catch (err) {
+            if (reposStat) reposStat.textContent = "6+";
+            renderProjects(fallbackProjects);
+        }
+    }
+
+    function renderProjects(projects) {
+        const container = document.getElementById("projects-container");
+        container.innerHTML = projects.map(p => `
+                <div class="glow-card p-6 rounded-2xl flex flex-col justify-between space-y-4 group">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl">👾</span>
+                            <a href="${p.html_url}" target="_blank" rel="noopener" class="text-gray-400 hover:text-brand-400 text-lg transition-colors">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-brand-400 transition-colors font-mono">
+                            ${p.name}
+                        </h3>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            ${p.description || "Interactive software repository developed by AmirHossein Rezaee 👾."}
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between text-xs font-mono text-gray-400 pt-4 border-t border-purple-500/20">
+                        <span class="text-brand-400">${p.language || "JavaScript"}</span>
+                        <span class="flex items-center gap-1">
+                            <i class="fa-regular fa-star text-brand-400"></i> ${p.stargazers_count || 0}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+    }
+
+    function copyToClipboard(text) {
+        const dummy = document.createElement("textarea");
+        document.body.appendChild(dummy);
+        dummy.value = text;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+
+        const status = document.getElementById("copy-status");
+        if (status) {
+            status.textContent = "Copied to Clipboard! 👾";
+            setTimeout(() => {
+                status.textContent = "Copy Email 👾";
+            }, 2000);
+        }
+    }
+
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        alert("Thank you! Your message has been prepared for AmirHossein Rezaee 👾.");
+        event.target.reset();
+    }
+
+    document.getElementById("mobile-menu-btn")?.addEventListener("click", () => {
+        const menu = document.getElementById("mobile-menu");
+        if (menu) menu.classList.toggle("hidden");
+    });
+
+    window.onload = function() {
+        animateCanvas();
+        typeEffect();
+        fetchGitHubRepos();
+    };
+</script>
 </body>
 </html>
